@@ -8,7 +8,7 @@
     "devPath": "http://localhost:3000",
     "beforeDevCommand": "",
     "beforeBuildCommand": ""
-  },
+  },  
   "tauri": {
     "bundle": {
       "active": true,
@@ -28,13 +28,11 @@
       "shortDescription": "",
       "longDescription": "",
       "deb": {
-        "depends": [],
-        "useBootstrapper": false
+        "depends": []
       },
       "macOS": {
         "frameworks": [],
         "minimumSystemVersion": "",
-        "useBootstrapper": false,
         "exceptionDomain": "",
         "signingIdentity": null,
         "entitlements": null
@@ -49,7 +47,7 @@
       "active": false
     },
     "allowlist": {
-      "all": false
+      "all": true
     },
     "windows": [
       {

@@ -1,48 +1,48 @@
-import "codemirror/mode/javascript/javascript.js";
-import "codemirror/theme/monokai.css";
-import "codemirror/lib/codemirror.css";
-import CodeMirror from "codemirror";
-import "./styles/codemirror.css";
-import "./styles/toggle.css";
-import { Toggle } from "./components/toggle";
-import { Textarea } from "./components/textarea";
+import { Toggle } from "./toggle/toggle";
+import { Component } from "./utilities/component";
+import { Tabs } from "./tabs/tabs";
+import "./base.css";
+import { EmptyTab } from "./emptytab/emptytab";
+import { Hamburgur } from "./hamburger/hamburger";
+import { Files } from "./files/files";
+import { ToggleMember } from "./utilities/toggle-member";
+import { Editor } from "./editor/editor";
+import { Pages } from "./utilities/pages";
 
-export interface App {
-  editor: CodeMirror.EditorFromTextArea;
-  textarea: Textarea;
-  toggle: Toggle;
+interface DefaultTM {
+  hamburger: Hamburgur;
+  files: Files;
+  tabs: Tabs;
+  [id: string]: ToggleMember<Pages>;
 }
 
-export class App implements App {
+class AppC extends Component<"div"> {
+  public toggle!: Toggle;
+  public TM!: DefaultTM;
+  public editor: Editor = new Editor();
+  public duration = 50; //milliseconds;
+
   constructor() {
-    this.toggle = new Toggle(this);
-    this.textarea = new Textarea(this);
+    super("div", "app");
   }
 
-  append(node: Element) {
-    this.textarea.append(node);
-    this.toggle.append(node);
+  public initialize() {
+    this.TM = {
+      hamburger: new Hamburgur(),
+      tabs: new Tabs(),
+      files: new Files(),
+    };
+    this.toggle = new Toggle();
+    this.toggle.render(this.getHtml());
     return this;
   }
 
-  activateKeyBindings() {
-    window.addEventListener("keydown", (k) => {
-      if (k.code === "Space" && k.ctrlKey === true) {
-        this.toggle.openOrClose();
-      }
-
-      if (k.code === "KeyF" && k.ctrlKey === true && k.altKey === true) {
-        this.toggle.openOrClose();
-        this.toggle.tray.icons[0].open();
-      }
-
-      if (k.code === "Period" && k.ctrlKey === true) {
-        k.preventDefault();
-      }
-    });
-  }
-
-  deactivateKeyBindings() {
-    window.addEventListener("keydown", () => {});
+  public show(component: Component<any>) {
+    component.render(this.getHtml());
   }
 }
+
+export const App = new AppC();
+App.initialize();
+
+App.TM.tabs.open("empty-tab", EmptyTab);
